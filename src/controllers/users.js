@@ -1,88 +1,93 @@
-//const express = require('express');
+const express = require('express');
+const User = require('../models/user')
 
-// GET
+
 /**
+ * GET
  * 
  * @param {express.Request} req 
  * @param {express.Response} res 
  */
-const getAllUsers = (req, res) => {
+const getAllUsers = async (req, res, next) => {
 
-    const users = [
-        {
-        id: 1,
-        name: "Joaquin"
-        },
-        {
-        id: 2,
-        name: "Gisela"
+    try {
+
+        const users = await User.find();
+        res.json(users);
+
+    } catch (error) {
+        next(error)
+    }
+};
+
+
+/**
+ * POST
+ * 
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ */
+const createUser = async (req, res, next) => {
+
+    try {
+        let user = req.body;
+        user = await User.create(user);
+
+        const result = {
+            message: 'User created',
+            user
         }
-    ]
 
-    // prueba errorHandler
-    //throw new Error('Ocurrió un error al obtener los usuarios de la base de datos.');
+        res.status(201).json(result);
 
-    // Para lanzar un 504. (Solución rápida sin crear clase Error propia)
-   /*  let error = new Error('Ocurrió un error al obtener los usuarios de la base de datos.');
-    error.code = 504;
-    throw error; */
-
-    res.json(users);    // status(200) por default
-};
-
-// POST
-/**
- * 
- * @param {express.Request} req 
- * @param {express.Response} res 
- */
-const createUser = (req, res) => {
-
-    const user = req.body;
-    user.id = 5484;
-
-    const result = {
-        message: 'User created',
-        user
+    } catch (error) {
+        next(error)
     }
-
-    res.status(201).json(result);
 };
 
-// PUT
+
 /**
+ * PUT
  * 
  * @param {express.Request} req 
  * @param {express.Response} res 
  */
-const updateUser = (req, res) => {
+const updateUser = async (req, res, next) => {
+
+    try {
+        const { id } = req.params;
+        let user = req.body;
+
+        user._id = id;
+        await User.updateOne(user);
+
+        const result = {
+            message: 'User updated',
+            user
+        }
+
+        res.json(result);
+
+    } catch (error) {
+        next(error)
+    }
+};
+
+
+/**
+ * PATCH
+ * TODO
+ * 
+ * @param {express.Request} req 
+ * @param {express.Response} res
+ */
+const updatePartialUser = (req, res, next) => {
 
     const { id } = req.params;
     const user = req.body;
 
     user.id = id;
 
-    const result = {
-        message: 'User updated',
-        user
-    }
-
-    res.json(result);
-};
-
-// PATCH
-/**
- * 
- * @param {express.Request} req 
- * @param {express.Response} res 
- */
-const updatePartialUser = (req, res) => {
-
-    const { id } = req.params;
-    const user = req.body;
-
-    user.id = id;
-    
     const result = {
         message: 'User updated with patch'
     }
@@ -90,21 +95,28 @@ const updatePartialUser = (req, res) => {
     res.json(result);
 };
 
-// DELETE
 /**
+ * DELETE
  * 
  * @param {express.Request} req 
  * @param {express.Response} res 
  */
-const deleteUser = (req, res) => {
-    
-    const { id } = req.params;
+const deleteUser = async (req, res, next) => {
 
-    const result = {
-        message: `User with id ${id} deleted`
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id);
+        user.remove();
+
+        const result = {
+            message: `User with id ${id} deleted`
+        }
+
+        res.json(result);
+
+    } catch (error) {
+        next(error)
     }
-
-    res.json(result);
 };
 
 module.exports = {

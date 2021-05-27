@@ -1,9 +1,12 @@
 const ExpressServer = require('./server/expressServer');
 const config = require('../config');
-//const { loggers } = require('winston');
 const logger = require('./logger');
+const mongooseLoader = require('./mongoose');
 
 module.exports = async () => {
+
+    await mongooseLoader();
+    logger.info('DB loaded and connected');
 
     const server = new ExpressServer();
     logger.info('Express Loaded');
@@ -14,5 +17,3 @@ module.exports = async () => {
       ########################################
     `);
 }
-
-// module.exports = startServer;
