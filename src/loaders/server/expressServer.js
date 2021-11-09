@@ -16,16 +16,15 @@ class ExpressServer {
 
         this._routes();
 
-        //manejadores de errores
         this._notFound();
         this._errorHandler();
     }
 
     
     _middlewares() {
-        this.app.use(express.json());
+        this.app.use(express.json()); // para reconocer objetos entrantes y salientes como .json (content-type)
 
-        this.app.use(morgan('tiny'));
+        this.app.use(morgan('tiny')); // imprime los request por consola
     }
 
     _routes() {
@@ -37,6 +36,7 @@ class ExpressServer {
         this.app.use( this.basePathUser, require('../../routes/users') );
     }
 
+    // Middleware personalizado: Maneja 404 con .json (por defecto express lo maneja respondiendo un html)
     _notFound() {
         this.app.use((req, res, next) => {
             const err = new Error("Not Found");
