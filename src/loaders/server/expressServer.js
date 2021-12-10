@@ -9,6 +9,7 @@ class ExpressServer {
     constructor() {
         this.app = express();
         this.port = config.port;
+        this.basePathAuth = `${ config.api.prefix }/auth`;
         this.basePathUser = `${ config.api.prefix }/users`;
 
         this._middlewares();
@@ -33,7 +34,8 @@ class ExpressServer {
             res.status(200).end();
         });
 
-        this.app.use( this.basePathUser, require('../../routes/users') );
+        this.app.use( this.basePathAuth, require('../../routes/auth'));
+        this.app.use( this.basePathUser, require('../../routes/users'));
     }
 
     // Middleware personalizado: Maneja 404 con .json (por defecto express lo maneja respondiendo un html)
@@ -56,7 +58,8 @@ class ExpressServer {
             const body = {
                 error: {
                     code,
-                    message: err.message
+                    message: err.message,
+                    detail: err.data ////////
                 }
             }
             res.status(code).json(body);
