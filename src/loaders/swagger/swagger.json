@@ -15,7 +15,7 @@
       "description": "Desarrollo"
     },
     {
-      "url": "",
+      "url": "https://node-08-users-joaquin.herokuapp.com/api/v1",
       "description": "Producción"
     }
   ],
@@ -23,9 +23,113 @@
     {
       "name": "users",
       "description": "Operations about users."
+    },
+    {
+      "name": "login",
+      "description": "Users login"
     }
   ],
   "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["login"],
+        "summary": "User login.",
+        "description": "Service for users login.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "The user email",
+                    "example": "admin@user.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "The user password",
+                    "example": "administrator_123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A JSON object with data and status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "description": "Status",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "description": "The user's token",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOWQ2MzczYWI2ZjU5MDZjMDliZjg5MyIsImlhdCI6MTY0MDc1Njg4NywiZXhwIjoxNjQwODQzMjg3fQ.dMatZyTPx8aaCP18SqGKq6anWdfOnr8Ez_jEPcHxfRs"
+                        },
+                        "user": {
+                          "type": "string",
+                          "description": "The name of the user",
+                          "example": "Admin"
+                        },
+                        "role": {
+                          "type": "string",
+                          "description": "The user's role",
+                          "example": "ADMIN_ROLE"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/RequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/AuthenticationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ErrorDB"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users/": {
       "get": {
         "parameters": [
@@ -92,6 +196,17 @@
               }
             }
           },
+          "401": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/AuthenticationError"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Error message in JSON",
             "content": {
@@ -108,7 +223,7 @@
       "post": {
         "tags": ["users"],
         "summary": "Create a new user.",
-        "description": "",
+        "description": "# Service for create a new user\n - birthday format --> MM-DD-YYYY.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -133,6 +248,28 @@
               }
             }
           },
+          "401": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/AuthenticationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/AuthorizationError"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Error message in JSON",
             "content": {
@@ -150,8 +287,8 @@
     "/users/{id}": {
       "get": {
         "tags": ["users"],
-        "summary": "Return a list of users providing an existing id.",
-        "description": "",
+        "summary": "Return an existing user providing an existing id.",
+        "description": "# Service for retrieve a specific user data",
         "parameters": [
           {
             "name": "id",
@@ -188,6 +325,17 @@
               }
             }
           },
+          "401": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/AuthenticationError"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Error message in JSON",
             "content": {
@@ -204,7 +352,7 @@
       "put": {
         "tags": ["users"],
         "summary": "Update an existing user by providing the correct id.",
-        "description": "",
+        "description": "# Service for update a user.\n - birthday format --> MM-DD-YYYY.",
         "parameters": [
           {
             "name": "id",
@@ -248,6 +396,28 @@
               }
             }
           },
+          "401": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/AuthenticationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/AuthorizationError"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Error message in JSON",
             "content": {
@@ -264,7 +434,7 @@
       "delete": {
         "tags": ["users"],
         "summary": "Delete an existing user by providing the correct id.",
-        "description": "",
+        "description": "# Service for delete a specific user",
         "parameters": [
           {
             "name": "id",
@@ -287,6 +457,28 @@
                 "schema": {
                   "type": "object",
                   "$ref": "#/components/schemas/RequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/AuthenticationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error message in JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/AuthorizationError"
                 }
               }
             }
@@ -330,12 +522,12 @@
           "name": {
             "description": "The user name.",
             "type": "string",
-            "example": "Gastón"
+            "example": "Joaquín"
           },
           "lastName": {
             "description": "The user last name.",
             "type": "string",
-            "example": "Martinez"
+            "example": "Aliotta"
           },
           "email": {
             "description": "The user email.",
@@ -348,19 +540,19 @@
             "example": "$2b$10$om4Aa5l2.QdSip87EdJM"
           },
           "birthdate": {
-            "description": "The user birthdate.",
+            "description": "The user birthdate. (YYYY-MM-DD) ",
             "type": "date",
-            "example": "YY-MM-DD -> 1989-12-31"
+            "example": "1989-12-31"
           },
           "createdAt": {
-            "description": "date of the user creation.",
+            "description": "date of the user creation. (YYYY-MM-DD)",
             "type": "date",
-            "example": "YY-MM-DD -> 1989-12-31"
+            "example": "1989-12-31"
           },
           "updatedAt": {
-            "description": "date of the user update.",
+            "description": "date of the user update. (YYYY-MM-DD)",
             "type": "date",
-            "example": "YY-MM-DD -> 1989-12-31"
+            "example": "1989-12-31"
           }
         }
       },
@@ -371,12 +563,12 @@
           "name": {
             "description": "The user name.",
             "type": "string",
-            "example": "Gastón"
+            "example": "Joaquín"
           },
           "lastName": {
             "description": "The user last name.",
             "type": "string",
-            "example": "Martinez"
+            "example": "Aliotta"
           },
           "email": {
             "description": "The user email.",
@@ -391,7 +583,7 @@
           "birthdate": {
             "description": "The user birthdate.",
             "type": "date",
-            "example": "MM-DD-YYY -> 12/31/1989"
+            "example": "12/31/1989"
           }
         }
       },
@@ -424,7 +616,45 @@
             "example": "Search failed: description of the error"
           }
         }
+      },
+      "AuthenticationError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "Error code",
+            "type": "integer",
+            "example": "401"
+          },
+          "message": {
+            "description": "Error message",
+            "type": "string",
+            "example": "Authentication failed, .... description ...."
+          }
+        }
+      },
+      "AuthorizationError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "Error code",
+            "type": "integer",
+            "example": "403"
+          },
+          "message": {
+            "description": "Error message",
+            "type": "string",
+            "example": "Authorization failed! User without privileges."
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "JWT": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
       }
     }
-  }
+  },
+  "security": [{ "JWT": [] }]
 }
