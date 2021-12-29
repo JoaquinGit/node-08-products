@@ -27,27 +27,31 @@ Includes:
 - MongoDB
 ## Deployed version usage
 
-1. Go to https://node-08-users-joaquin.herokuapp.com/api/v1/documentation/
+1. Go to https://node-08-users-joaquin.herokuapp.com/documentation/
+
+2. Select production server
+
+![](./screenshots/01-Server.JPG)
 
 2. Go to login and click "Try it out"
 
-![](./screenshots/01-Login.JPG)
+![](./screenshots/02-Login.JPG)
 
 3. Execute the default example to receive a token.
 
-![](./screenshots/02-Execute.JPG)
+![](./screenshots/03-Execute.JPG)
 
 4. Copy the Token within the response.
 
-![](./screenshots/03-Token.JPG)
+![](./screenshots/04-Token.JPG)
 
 5. Click on Authorize.
 
-![](./screenshots/04-Authorize.JPG)
+![](./screenshots/05-Authorize.JPG)
 
 6. Paste the Token.
 
-![](./screenshots/05-Authorize2.JPG)
+![](./screenshots/06-Authorize2.JPG)
 
 7. Now you can perform the rest of the API calls.
 
